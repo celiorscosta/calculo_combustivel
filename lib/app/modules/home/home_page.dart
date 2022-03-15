@@ -59,7 +59,31 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                     ],
                     color: containerColorBlue,
                   ),
-                  child: Column(children: const []),
+                  child: Column(
+                    children: [
+                      Form(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _inputText('Alcool'),
+                              _inputText('Gasolina'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: null,
+                        child: Container(),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.transparent, // <-- Button color
+                          onPrimary: Colors.transparent, // <-- Splash color
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -70,6 +94,44 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
             'Too many clicks',
             style: TextStyle(color: Colors.red),
           ),
+        ),
+      ),
+    );
+  }
+
+  _inputText(String label) {
+    return Container(
+      height: 70,
+      width: MediaQuery.of(context).size.width * 0.40,
+      alignment: Alignment.center,
+      child: TextFormField(
+        cursorColor: Colors.white,
+        enableInteractiveSelection: false,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 15.0,
+            fontWeight: FontWeight.normal,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.deepPurple.shade200,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.deepPurple.shade200,
+            ),
+          ),
+          suffixText: label,
+          suffixStyle: const TextStyle(color: Colors.white, fontSize: 20.0),
         ),
       ),
     );
