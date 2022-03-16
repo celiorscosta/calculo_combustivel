@@ -1,4 +1,5 @@
 import 'package:calculo_combustivel/app/helpers/colors.dart';
+import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
@@ -13,13 +14,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends ModularState<HomePage, HomeStore> {
+  final homeStore = Modular.get<HomeStore>();
+  final _costMaskController = TextInputMask(
+    mask: 'R!\$! !9+.999',
+    placeholder: '0',
+    maxPlaceHolders: 4,
+    reverse: true,
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backGroundColor,
-      body: ScopedBuilder<HomeStore, Exception, int>(
+      body: ScopedBuilder<HomeStore, Exception, double>(
         store: store,
-        onState: (_, counter) {
+        onState: (_, calc) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -44,7 +52,6 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 height: 300.0,
                 child: Container(
                   alignment: Alignment.center,
-                  // color: Colors.blue,
                   height: 250,
                   width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(
@@ -60,6 +67,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                     color: containerColorBlue,
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Form(
                         child: Padding(
@@ -68,20 +76,49 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              _inputText('Alcool'),
-                              _inputText('Gasolina'),
+                              _inputText(
+                                'Etanol',
+                                homeStore.etanolController,
+                              ),
+                              _inputText(
+                                'Gasolina',
+                                homeStore.gasolinaController,
+                              ),
                             ],
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
                       ElevatedButton(
-                        onPressed: null,
-                        child: Container(),
+                        onPressed: homeStore.increment,
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent, // <-- Button color
-                          onPrimary: Colors.transparent, // <-- Splash color
+                          primary: const Color.fromARGB(255, 67, 52, 136),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          elevation: 15.0,
                         ),
-                      )
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: Text(
+                            'Calcular',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        calc == 0.0 ? '' : '${calc.toStringAsPrecision(2)}%',
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -91,7 +128,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         },
         onError: (context, error) => const Center(
           child: Text(
-            'Too many clicks',
+            'Erro',
             style: TextStyle(color: Colors.red),
           ),
         ),
@@ -99,12 +136,14 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     );
   }
 
-  _inputText(String label) {
+  _inputText(String label, TextEditingController? controller) {
     return Container(
       height: 70,
       width: MediaQuery.of(context).size.width * 0.40,
       alignment: Alignment.center,
       child: TextFormField(
+        controller: controller,
+        inputFormatters: [_costMaskController],
         cursorColor: Colors.white,
         enableInteractiveSelection: false,
         style: const TextStyle(
@@ -130,8 +169,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               color: Colors.deepPurple.shade200,
             ),
           ),
-          suffixText: label,
-          suffixStyle: const TextStyle(color: Colors.white, fontSize: 20.0),
+          // suffixText: label,
+          // suffixStyle: const TextStyle(color: Colors.white, fontSize: 20.0),
         ),
       ),
     );
