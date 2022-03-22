@@ -4,13 +4,15 @@ import 'package:flutter_triple/flutter_triple.dart';
 class HomeStore extends NotifierStore<Exception, double> {
   HomeStore() : super(0.0);
 
-  TextEditingController etanolController = TextEditingController();
-  TextEditingController gasolinaController = TextEditingController();
+  final etanolController = TextEditingController();
+  final gasolinaController = TextEditingController();
 
   Future<void> increment() async {
     setLoading(true);
     if (etanolController.text.isNotEmpty &&
-        gasolinaController.text.isNotEmpty) {
+        gasolinaController.text.isNotEmpty &&
+        !etanolController.text.contains('0.000') &&
+        !gasolinaController.text.contains('0.000')) {
       double etanol = double.parse(
         etanolController.text.replaceAll('R\$', ''),
       );
