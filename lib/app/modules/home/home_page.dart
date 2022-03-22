@@ -112,9 +112,10 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                         height: 20.0,
                       ),
                       Text(
-                        calc == 0.0 ? '' : '${calc.toStringAsPrecision(2)}%',
+                        _mensagem(calc),
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
-                          fontSize: 30,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -134,6 +135,15 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         ),
       ),
     );
+  }
+
+  String _mensagem(double calc) {
+    var resp = calc == 0
+        ? ''
+        : calc >= 70.0
+            ? '${calc.toStringAsPrecision(2)}% \nAbasteça com Gasolina'
+            : '${calc.toStringAsPrecision(2)}% \nAbasteça com Etanol';
+    return resp;
   }
 
   _inputText(String label, TextEditingController? controller) {
